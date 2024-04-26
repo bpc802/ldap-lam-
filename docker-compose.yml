@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  ldap-account-manager:
+    image: ldapaccountmanager/lam:8.3
+    restart: unless-stopped
+    ports:
+      - "80"
+    volumes:
+      - lamconfig:/var/lib/ldap-account-manager/config
+    networks:
+      - "bpc_net"
+    environment:
+      - VIRTUAL_HOST=lam.bpcpi.com
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=sourav.com
+      - LETSENCRYPT_EMAIL=sourav@gmail.com
+      - LAM_PASSWORD=${LAM_PASSWORD}
+      - LAM_LANG=en_US
+      - LDAP_SERVER=${LDAP_SERVER}
+      - LDAP_DOMAIN=${LDAP_DOMAIN}
+      - LDAP_BASE_DN=${LDAP_BASE_DN}
+      - LDAP_USER=cn=admin,${LDAP_BASE_DN}
+      - DEBUG=true
+    hostname: ldap-account-manager
+
+volumes:
+  lamconfig:
+
+networks:
+  bpc_net:
+    external: true
